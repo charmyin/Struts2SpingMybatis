@@ -1,24 +1,33 @@
 package com.zsj.parking.action;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.challenger.system.services.TestConnectionService;
 import com.common.utils.UUIDGenerator;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
+import com.struts.utils.SessionUtils;
 import com.zsj.parking.dao.CarMapper;
+import com.zsj.parking.dao.UsersMapper;
 import com.zsj.parking.vo.Car;
+import com.zsj.parking.vo.Users;
 
 
 public class CarAction extends ActionSupport {
 	
 	@Resource
 	private CarMapper carMapper;
+	@Resource
+	private UsersMapper usersMapper;
 	
 	private List<Car> carList = new ArrayList<Car>();
 	
@@ -29,6 +38,8 @@ public class CarAction extends ActionSupport {
 	
 	//用于导航菜单确定位置
 	private String navname="car";
+	
+	private String typeaheadString="[]";
 	
 	/**
 	 * 
@@ -53,6 +64,21 @@ public class CarAction extends ActionSupport {
 	 * @return
 	 */
 	public String toAddCar(){
+		List<Users> users = usersMapper.selectAll();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			typeaheadString = mapper.writeValueAsString(users);
+			
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return Action.SUCCESS;
 	}
 
@@ -61,6 +87,22 @@ public class CarAction extends ActionSupport {
 	 * @return
 	 */
 	public String toEditCar(){
+		
+		List<Users> users = usersMapper.selectAll();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			typeaheadString = mapper.writeValueAsString(users);
+			
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		carVO = carMapper.selectByPrimaryKey(carId);
 		return Action.SUCCESS;
 	}
@@ -78,12 +120,29 @@ public class CarAction extends ActionSupport {
 	 * @return
 	 */
 	public String listCar(){
-		this.carList = carMapper.selectAll();
+		carVO = new Car();
+		//管理员返回所有停车位信息
+		if(SessionUtils.getSession().get("role").toString().equals("admin")){
+			this.carList = carMapper.selectAll();
+			return Action.SUCCESS;
+		}
+		//业主只返回自己的停车位置信息
+		Users user = (Users)SessionUtils.getSession().get("userinfo");
+		carVO.setOwnerid(user.getId());
+		this.carList = carMapper.selectAllEqual(carVO);
 		return Action.SUCCESS;
 	}
 
 	
 	
+	public String getTypeaheadString() {
+		return typeaheadString;
+	}
+
+	public void setTypeaheadString(String typeaheadString) {
+		this.typeaheadString = typeaheadString;
+	}
+
 	public TestConnectionService getTestConnectionService() {
 		return testConnectionService;
 	}

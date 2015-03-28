@@ -34,7 +34,10 @@
 	<div class="panel panel-default">
 	  <!-- Default panel contents -->
 	  <div class="panel-heading">停车记录管理
-	  <a href="toSave.action" style="float:right;">新增</a>
+	  <c:if test="${null ne role && 'admin' eq  role}">
+		 <a href="toSave.action" style="float:right;">新增</a>
+	  </c:if>
+	 
 	  </div>
 	
 	  <!-- Table -->
@@ -46,6 +49,9 @@
             <th>所在位置</th>
             <th>所属业主</th>
             <th>备注</th>
+            <c:if test="${null ne role && 'admin' eq  role}">
+				 <th>操作</th>
+			</c:if>
           </tr>
         </thead>
         <tbody>
@@ -71,11 +77,11 @@
 						</c:if>
 		            </td>
 		            <td>
-		            	<c:if test="${null ne parkingPlace.userid && '' ne  parkingPlace.userid}">
-							<c:out value="${parkingPlace.userid}" />
+		            	<c:if test="${null ne parkingPlace.userName && '' ne  parkingPlace.userName}">
+							<c:out value="${parkingPlace.userName}" />(<c:out value="${parkingPlace.userLoginId}" />)
 						</c:if>
-						<c:if test="${null eq parkingPlace.userid}">
-							&nbsp;
+						<c:if test="${null eq parkingPlace.userName}">
+							<strong style="color:red;">无所属业主</strong>
 						</c:if>
 		            </td>
 		            <td>
@@ -86,11 +92,13 @@
 							&nbsp;
 						</c:if>
 		            </td>
-		            
-		             <td>
-		            	<a href="toEdit.action?parkingPlaceId=<c:if test="${null ne parkingPlace.id && '' ne parkingPlace.id}"><c:out value="${parkingPlace.id}" /></c:if>" >修改</a>&nbsp;&nbsp;
-		            	<a href="delete.action?parkingPlaceId=<c:if test="${null ne parkingPlace.id && '' ne parkingPlace.id}"><c:out value="${parkingPlace.id}" /></c:if>" >删除</a>
-		            </td>
+		            <c:if test="${null ne role && 'admin' eq  role}">
+						<td>
+			            	<a href="toEdit.action?parkingPlaceId=<c:if test="${null ne parkingPlace.id && '' ne parkingPlace.id}"><c:out value="${parkingPlace.id}" /></c:if>" >修改</a>&nbsp;&nbsp;
+			            	<a href="delete.action?parkingPlaceId=<c:if test="${null ne parkingPlace.id && '' ne parkingPlace.id}"><c:out value="${parkingPlace.id}" /></c:if>" >删除</a>
+			            </td>
+					</c:if>
+		             
 	            </tr>
       		</c:forEach>
         </tbody>

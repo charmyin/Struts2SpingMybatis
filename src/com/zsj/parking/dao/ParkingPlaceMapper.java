@@ -22,4 +22,6 @@ public interface ParkingPlaceMapper {
     int updateByPrimaryKey(ParkingPlace record);
 
 	List<ParkingPlace> selectAll();
+	
+	List<ParkingPlace> selectAllEqual(ParkingPlace record);
 }

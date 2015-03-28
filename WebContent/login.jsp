@@ -73,7 +73,7 @@
 	      <strong><c:out value="${message}" /></strong> 
 	    </div>
       </c:if>
-       <form class="form-signin" method="post" action="/proj/user/login.action">
+       <form class="form-signin" method="post" action="/proj/user/loginPost.action">
 	        <h2 class="form-signin-heading">欢迎使用车库管理系统</h2>
 	        <label for="inputEmail" class="sr-only">账号</label>
 	        <input type="text" id="inputEmail" class="form-control" placeholder="账号" name="loginid" required autofocus>	       

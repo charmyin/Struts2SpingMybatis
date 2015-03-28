@@ -1,18 +1,25 @@
 package com.zsj.parking.action;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.challenger.system.services.TestConnectionService;
 import com.common.utils.UUIDGenerator;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
+import com.struts.utils.SessionUtils;
 import com.zsj.parking.dao.ParkingPlaceMapper;
+import com.zsj.parking.dao.UsersMapper;
 import com.zsj.parking.vo.ParkingPlace;
+import com.zsj.parking.vo.Users;
 
 
 public class ParkingPlaceAction extends ActionSupport {
@@ -22,6 +29,9 @@ public class ParkingPlaceAction extends ActionSupport {
 	
 	private List<ParkingPlace> parkingPlaceList = new ArrayList<ParkingPlace>();
 	
+	@Resource
+	private UsersMapper usersMapper;
+	
 	ParkingPlace parkingPlaceVO;// = new ParkingPlace();
 	
 	//用户ID
@@ -30,6 +40,7 @@ public class ParkingPlaceAction extends ActionSupport {
 	//用于导航菜单确定位置
 	private String navname="place";
 	
+	private String typeaheadString="[]";
 	/**
 	 * 
 	 */
@@ -53,6 +64,21 @@ public class ParkingPlaceAction extends ActionSupport {
 	 * @return
 	 */
 	public String toAddParkingPlace(){
+		List<Users> users = usersMapper.selectAll();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			typeaheadString = mapper.writeValueAsString(users);
+			
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return Action.SUCCESS;
 	}
 
@@ -61,6 +87,21 @@ public class ParkingPlaceAction extends ActionSupport {
 	 * @return
 	 */
 	public String toEditParkingPlace(){
+		List<Users> users = usersMapper.selectAll();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			typeaheadString = mapper.writeValueAsString(users);
+			
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		parkingPlaceVO = parkingPlaceMapper.selectByPrimaryKey(parkingPlaceId);
 		return Action.SUCCESS;
 	}
@@ -78,10 +119,20 @@ public class ParkingPlaceAction extends ActionSupport {
 	 * @return
 	 */
 	public String listParkingPlace(){
-		this.parkingPlaceList = parkingPlaceMapper.selectAll();
+		parkingPlaceVO = new ParkingPlace();
+		//管理员返回所有停车位信息
+		if(SessionUtils.getSession().get("role").toString().equals("admin")){
+			this.parkingPlaceList = parkingPlaceMapper.selectAll();
+			return Action.SUCCESS;
+		}
+		//业主只返回自己的停车位置信息
+		Users user = (Users)SessionUtils.getSession().get("userinfo");
+		parkingPlaceVO.setUserid(user.getId());
+		this.parkingPlaceList = parkingPlaceMapper.selectAllEqual(parkingPlaceVO);
 		return Action.SUCCESS;
 	}
 
+	
 	
 	
 	public TestConnectionService getTestConnectionService() {
@@ -122,6 +173,14 @@ public class ParkingPlaceAction extends ActionSupport {
 
 	public void setNavname(String navname) {
 		this.navname = navname;
+	}
+
+	public String getTypeaheadString() {
+		return typeaheadString;
+	}
+
+	public void setTypeaheadString(String typeaheadString) {
+		this.typeaheadString = typeaheadString;
 	}
 	
 	

@@ -9,6 +9,8 @@
     <result column="ownerId" property="ownerid" jdbcType="VARCHAR" />
     <result column="engineNumber" property="enginenumber" jdbcType="VARCHAR" />
     <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="name" property="userName" jdbcType="VARCHAR" />
+    <result column="loginId" property="userLoginId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -40,18 +42,28 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, plateNumber, brand, model, ownerId, engineNumber, createTime
+    a.id as id, plateNumber, brand, model, b.id as ownerId, engineNumber, createTime, name, loginId
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from car
-    where id = #{id,jdbcType=VARCHAR}
+    from car as a left join users as b on a.ownerid=b.id
+    where a.id = #{id,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from car
+    from car as a left join users as b on a.ownerid=b.id
+  </select>
+  <select id="selectAllEqual" resultMap="BaseResultMap" parameterType="com.zsj.parking.vo.Car">
+    select 
+    <include refid="Base_Column_List" />
+    from car as a left join users as b on a.ownerid=b.id
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+		<if test="ownerid != null">
+			AND ownerid=#{ownerid, jdbcType=VARCHAR}
+		</if>	
+	</trim>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from car

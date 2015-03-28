@@ -10,7 +10,20 @@
 	</package> 
 	<!-- 用户管理 -->
 	<package name="user" extends="default" namespace="/user" >
+		<interceptors>
+            <interceptor name="authentication" class="com.zsj.parking.interceptor.AuthenticationInterceptor"></interceptor>
+            <interceptor-stack name="authStack">
+                <interceptor-ref name="authentication"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        
+        <default-interceptor-ref name="authStack"></default-interceptor-ref>
 
+		<global-results>
+            <result name="login" >/login.jsp</result>
+        </global-results>
+	
 		<action name="toEdit" method="toEditUser" class="com.zsj.parking.action.UserAction">
 			<result name="success">/pages/users/edit.jsp</result>
 		</action>	
@@ -25,13 +38,19 @@
 		</action>
 
 		<action name="list" method="listUsers" class="com.zsj.parking.action.UserAction">
+			<interceptor-ref name="authentication"></interceptor-ref>
 			<result name="success">/pages/users/list.jsp</result>
 		</action>
 		<!-- 登录 -->
 		<action name="loginIndex" method="toCertificate" class="com.zsj.parking.action.UserAction">
 			<result name="success">/login.jsp</result>
 		</action>
-		<action name="login" method="certificate" class="com.zsj.parking.action.UserAction">
+		<!-- 退出 -->
+		<action name="logout" method="logout" class="com.zsj.parking.action.UserAction">
+			<result name="success">/login.jsp</result>
+		</action>
+		<action name="loginPost" method="certificate" class="com.zsj.parking.action.UserAction">
+			<interceptor-ref name="defaultStack"></interceptor-ref>
 			<result name="error">/login.jsp</result>
 			<result name="success" type="redirectAction">list.action</result>
 			<result name="simpleuser" type="redirectAction">../car/list.action</result>
@@ -40,6 +59,19 @@
 	
 	<!-- 车辆管理 -->
 	<package name="car" extends="default" namespace="/car" >
+		<interceptors>
+            <interceptor name="authentication" class="com.zsj.parking.interceptor.AuthenticationInterceptor"></interceptor>
+            <interceptor-stack name="authStack">
+                <interceptor-ref name="authentication"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="authStack"></default-interceptor-ref>
+
+		<global-results>
+            <result name="login" >/login.jsp</result>
+        </global-results>
+	
 		<action name="toEdit" method="toEditCar" class="com.zsj.parking.action.CarAction">
 			<result name="success">/pages/cars/edit.jsp</result>
 		</action>	
@@ -60,6 +92,19 @@
 	 
 	 <!-- 停车位管理 -->
 	 <package name="parkingPlace" extends="default" namespace="/parkingPlace" >
+	 
+	 	<interceptors>
+            <interceptor name="authentication" class="com.zsj.parking.interceptor.AuthenticationInterceptor"></interceptor>
+            <interceptor-stack name="authStack">
+                <interceptor-ref name="authentication"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="authStack"></default-interceptor-ref>
+
+		<global-results>
+            <result name="login" >/login.jsp</result>
+        </global-results>
 
 		<action name="toEdit" method="toEditParkingPlace" class="com.zsj.parking.action.ParkingPlaceAction">
 			<result name="success">/pages/parkingPlace/edit.jsp</result>
@@ -81,6 +126,20 @@
 	 
 	 <!-- 停车记录  -->
 	 <package name="parkingRecord" extends="default" namespace="/parkingRecord" >
+	 
+	 	<interceptors>
+            <interceptor name="authentication" class="com.zsj.parking.interceptor.AuthenticationInterceptor"></interceptor>
+            <interceptor-stack name="authStack">
+                <interceptor-ref name="authentication"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="authStack"></default-interceptor-ref>
+
+		<global-results>
+            <result name="login" >/login.jsp</result>
+        </global-results>
+	 
 		<action name="toEdit" method="toEditParkingRecord" class="com.zsj.parking.action.ParkingRecordAction">
 			<result name="success">/pages/parkingRecord/edit.jsp</result>
 		</action>	

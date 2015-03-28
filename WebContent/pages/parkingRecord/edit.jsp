@@ -17,6 +17,59 @@
     <link rel="stylesheet" type="text/css" href="/proj/public/vendors/bootstrap/css/bootstrap.css">
     <script type="text/javascript" src="/proj/public/vendors/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/proj/public/vendors/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/proj/public/vendors/bootstrap/datapicker/js/bootstrap-datapicker.min.js"></script>
+    <script type="text/javascript" src="/proj/public/vendors/bootstrap/typeahead/typeahead.bundle.js"></script>
+    <link rel='stylesheet' href='/proj/public/vendors/bootstrap/typeahead/typeahead.css' />
+    <script type="text/javascript">
+    	$(function(){
+    		var substringMatcher = function(objs) {
+    			  return function findMatches(q, cb) {
+    			    var matches, substrRegex;
+    			 	//清除原有数据
+    			 	$("#inputuseridvalue").val("");
+    			    // an array that will be populated with substring matches
+    			    matches = [];
+    			    
+    			    // regex used to determine if a string contains the substring `q`
+    			    substrRegex = new RegExp(q, 'i');
+    			 
+    			    // iterate through the pool of strings and for any string that
+    			    // contains the substring `q`, add it to the `matches` array
+    			    $.each(objs, function(i, obj) {
+    			      if (substrRegex.test(obj.name)) {
+    			        // the typeahead jQuery plugin expects suggestions to a
+    			        // JavaScript object, refer to typeahead docs for more info
+    			        matches.push({ value: obj.name+"--"+obj.loginid ,id:obj.id});
+    			      }
+    			    });
+    			    
+    			    cb(matches);
+    			    
+    			  };
+    			};
+    			 
+    			var states =<c:out value="${typeaheadString}" escapeXml="false"/>
+    			 
+    			$('#the-basics .typeahead').typeahead({
+    			  hint: true,
+    			  highlight: true,
+    			  minLength: 1
+    			 
+    			},
+    			{
+    			  name: 'states',
+    			  displayKey: 'value',
+    			  source: substringMatcher(states)
+    			}).on("typeahead:selected", function(e, obj, name){
+    				$("#inputuseridvalue").val(obj.id);
+    			}).on("typeahead:closed", function(){
+    				var inputuserid = $("#inputuseridvalue").val();
+    				if(inputuserid==""){
+    					$("#inputuserid").val("");
+    				}
+    			});
+    	});
+    </script>
   </head>
  <body>
 
@@ -56,7 +109,10 @@
 		  <div class="form-group">
 		    <label for="inputuserid" class="col-sm-4 control-label">所属业主</label>
 		    <div class="col-sm-4">
-		      <input type="text" class="form-control"  name="parkingRecordVO.userid" id="inputuserid" placeholder="所属业主"  value="<c:if test="${null ne parkingRecordVO.userid && '' ne  parkingRecordVO.userid}"><c:out value="${parkingRecordVO.userid}" /></c:if>">
+		     <div id="the-basics">
+				  <input class="typeahead form-control" type="text" id="inputuserid" placeholder="所属业主" value="<c:if test="${null ne parkingRecordVO.userName && '' ne  parkingRecordVO.userName}"><c:out value="${parkingRecordVO.userName}" />--<c:out value="${parkingRecordVO.userLoginId}" /></c:if>">
+				  <input type="hidden" name="parkingRecordVO.userid" id="inputuseridvalue" value="<c:if test="${null ne parkingRecordVO.userid && '' ne  parkingRecordVO.userid}"><c:out value="${parkingRecordVO.userid}" /></c:if>" />
+			  </div>
 		    </div>
 		  </div>
 		  <div class="form-group">
@@ -68,7 +124,22 @@
 		  <div class="form-group">
 		    <label for="inputinorout" class="col-sm-4 control-label">出库/入库</label>
 		    <div class="col-sm-4">
-		      <input type="text" class="form-control"  name="parkingRecordVO.inorout" id="inputinorout" placeholder="出库/入库  "  value="<c:if test="${null ne parkingRecordVO.inorout && '' ne  parkingRecordVO.inorout}"><c:out value="${parkingRecordVO.inorout}" /></c:if>">
+		      	<c:if test="${ 1 eq parkingRecordVO.inorout}">
+					  <select class="form-control" name="parkingRecordVO.inorout" >
+					  		<option value="0" >出库</option>
+					  		<option value="1" selected>入库</option>
+					  </select>
+				 </c:if>
+				 
+				 <c:if test="${ 0 eq parkingRecordVO.inorout}">
+					  <select class="form-control" name="parkingRecordVO.inorout" >
+					  		<option value="0" selected>出库</option>
+					  		<option value="1" >入库</option>
+					  </select>
+				 </c:if>
+			 
+			 
+			 
 		    </div>
 		  </div>
 		  <div class="form-group">
@@ -80,7 +151,7 @@
 		  <div class="form-group">
 		    <label for="inputhappentime" class="col-sm-4 control-label">出入库时间</label>
 		    <div class="col-sm-4">
-		      <input type="text" class="form-control"  name="parkingRecordVO.happentime" id="inputhappentime" placeholder="出入库时间"  value="<c:if test="${null ne parkingRecordVO.happentime && '' ne  parkingRecordVO.happentime}"><c:out value="${parkingRecordVO.happentime}" /></c:if>">
+		      <input type="text" class="form-control"  name="parkingRecordVO.happentime" id="inputhappentime" placeholder="出入库时间"  value="<c:if test="${null ne parkingRecordVO.happentime && '' ne  parkingRecordVO.happentime}"><fmt:formatDate value="${parkingRecordVO.happentime}" var="formattedDate" type="date" pattern="yyyy-MM-dd HH:mm:ss" />${formattedDate}</c:if>">
 		    </div>
 		  </div>
 	    	

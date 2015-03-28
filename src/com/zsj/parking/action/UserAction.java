@@ -111,7 +111,7 @@ public class UserAction extends ActionSupport {
 			ActionContext actionContext = ActionContext.getContext();   
 			  
 	        Map session = actionContext.getSession();   
-
+	        session.put("userinfo", user);  
 			if(loginid.equals("admin")){
 				session.put("role", "admin");   
 			}else{
@@ -119,7 +119,7 @@ public class UserAction extends ActionSupport {
 				return "simpleuser";
 			}
 			
-			session.put("userinfo", user);   
+			 
 			
      		return Action.SUCCESS;
 		}else{
@@ -135,8 +135,24 @@ public class UserAction extends ActionSupport {
 	public String toCertificate(){
 		return Action.SUCCESS;
 	}
-	
-	
+	/**
+	 * 退出
+	 * @return
+	 */
+	public String logout(){
+		ActionContext actionContext = ActionContext.getContext();   
+		Map session = actionContext.getSession() ;
+		if (session instanceof org.apache.struts2.dispatcher.SessionMap) {
+		    try {
+		        ((org.apache.struts2.dispatcher.SessionMap) session).invalidate();
+		    } catch (IllegalStateException e) {
+		    	e.printStackTrace();
+		        logger.error(e.getMessage());
+		    }
+		}
+        actionContext.setSession(null);
+		return Action.SUCCESS;
+	}
 	
 	
 	public TestConnectionService getTestConnectionService() {

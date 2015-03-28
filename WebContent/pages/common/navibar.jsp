@@ -38,7 +38,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
              <!--  <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li> -->
-              <li><a href="/proj/user/loginIndex.action">退出</a></li>
+              <li><a href="/proj/user/logout.action">退出</a></li>
               <!-- <li><a href="../navbar-fixed-top/">Fixed top</a></li> -->
             </ul>
           </div><!--/.nav-collapse -->

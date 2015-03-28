@@ -7,6 +7,8 @@
     <result column="carplace" property="carplace" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="name" property="userName" jdbcType="VARCHAR" />
+    <result column="loginId" property="userLoginId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -38,19 +40,31 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, userId, carplace, code, remark
+    a.id as id, a.id as userId, carplace, code, remark, name, loginId, name, loginId
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from parkingplace
-    where id = #{id,jdbcType=VARCHAR}
+    from parkingplace as a left join users as b on a.userid=b.id
+    where a.id = #{id,jdbcType=VARCHAR}
   </select>
   
   <select id="selectAll" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
-    from parkingplace
+    from parkingplace as a left join users as b on a.userid=b.id
+  </select>
+  
+  
+  <select id="selectAllEqual" resultMap="BaseResultMap" parameterType="com.zsj.parking.vo.ParkingPlace">
+    select 
+    <include refid="Base_Column_List" />
+    from parkingplace as a left join users as b on a.userid=b.id
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+		<if test="userid != null">
+			AND userid=#{userid, jdbcType=VARCHAR}
+		</if>	
+	</trim>
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >

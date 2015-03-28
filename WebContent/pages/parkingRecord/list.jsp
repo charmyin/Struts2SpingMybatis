@@ -34,7 +34,10 @@
 	<div class="panel panel-default">
 	  <!-- Default panel contents -->
 	  <div class="panel-heading">车位管理
-	  <a href="toSave.action" style="float:right;">新增</a>
+	   <c:if test="${null ne role && 'admin' eq  role}">
+				<a href="toSave.action" style="float:right;">新增</a>
+	   </c:if>
+	  
 	  </div>
 	
 	  <!-- Table -->
@@ -43,12 +46,15 @@
           <tr>
             <th>#</th>
             <th>车牌号</th>
-            <th>车辆信息</th>
+            
             <th>所属业主</th>
             <th>所在停车位</th>
             <th>出库/入库</th>
             <th>费用</th>
             <th>出入库时间</th>
+            <c:if test="${null ne role && 'admin' eq  role}">
+				 <th>操作</th>
+			</c:if>
           </tr>
         </thead>
         <tbody>
@@ -66,19 +72,11 @@
 						</c:if>
 		            </td>
 		            <td>
-		            	<c:if test="${null ne parkingRecord.carid && '' ne  parkingRecord.carid}">
-							<c:out value="${parkingRecord.carid}" />
+		            	<c:if test="${null ne parkingRecord.userName && '' ne  parkingRecord.userName}">
+							<c:out value="${parkingRecord.userName}" />(<c:out value="${parkingRecord.userLoginId}" />)
 						</c:if>
-						<c:if test="${null eq parkingRecord.carid}">
-							&nbsp;
-						</c:if>
-		            </td>
-		            <td>
-		            	<c:if test="${null ne parkingRecord.userid && '' ne  parkingRecord.userid}">
-							<c:out value="${parkingRecord.userid}" />
-						</c:if>
-						<c:if test="${null eq parkingRecord.userid}">
-							&nbsp;
+						<c:if test="${null eq parkingRecord.userName}">
+							<strong style="color:red;">外部车辆</strong>
 						</c:if>
 		            </td>
 		            <td>
@@ -90,11 +88,11 @@
 						</c:if>
 		            </td>
 		            <td>
-		            	<c:if test="${null ne parkingRecord.inorout && '' ne  parkingRecord.inorout}">
-							<c:out value="${parkingRecord.inorout}" />
+		            	<c:if test="${ 1 eq parkingRecord.inorout}">
+							入库
 						</c:if>
-						<c:if test="${null eq parkingRecord.inorout}">
-							&nbsp;
+						<c:if test="${ 0 eq parkingRecord.inorout}">
+							出库
 						</c:if>
 		            </td>
 		            <td>
@@ -107,16 +105,20 @@
 		            </td>
 		            <td>
 		            	<c:if test="${null ne parkingRecord.happentime && '' ne  parkingRecord.happentime}">
-							<c:out value="${parkingRecord.happentime}" />
+		            		<fmt:formatDate value="${parkingRecord.happentime}" var="formattedDate" type="date" pattern="yyyy-MM-dd HH:mm:ss" />
+		            		${formattedDate}
 						</c:if>
 						<c:if test="${null eq parkingRecord.happentime}">
 							&nbsp;
 						</c:if>
 		            </td>
-		             <td>
-		            	<a href="toEdit.action?parkingRecordId=<c:if test="${null ne parkingRecord.id && '' ne parkingRecord.id}"><c:out value="${parkingRecord.id}" /></c:if>" >修改</a>&nbsp;&nbsp;
-		            	<a href="delete.action?parkingRecordId=<c:if test="${null ne parkingRecord.id && '' ne parkingRecord.id}"><c:out value="${parkingRecord.id}" /></c:if>" >删除</a>
-		            </td>
+		            <c:if test="${null ne role && 'admin' eq  role}">
+						    <td>
+				             	<a href="toEdit.action?parkingRecordId=<c:if test="${null ne parkingRecord.id && '' ne parkingRecord.id}"><c:out value="${parkingRecord.id}" /></c:if>" >修改</a>&nbsp;&nbsp;
+				            	<a href="delete.action?parkingRecordId=<c:if test="${null ne parkingRecord.id && '' ne parkingRecord.id}"><c:out value="${parkingRecord.id}" /></c:if>" >删除</a>
+				            </td>
+					</c:if>
+		            
 	            </tr>
       		</c:forEach>
         </tbody>

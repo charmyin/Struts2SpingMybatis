@@ -11,6 +11,8 @@
     <result column="fee" property="fee" jdbcType="REAL" />
     <result column="happenTime" property="happentime" jdbcType="TIMESTAMP" />
     <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="name" property="userName" jdbcType="VARCHAR" />
+    <result column="loginId" property="userLoginId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -42,19 +44,32 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, plateNumber, carId, userId, parkingPlaceId, inOrOut, fee, happenTime, createTime
+    a.id as id, plateNumber, carId, b.id as userId, parkingPlaceId, inOrOut, fee, happenTime, createTime, name, loginId
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from parkingrecord
-    where id = #{id,jdbcType=VARCHAR}
+    from parkingrecord as a left join users as b on a.userId=b.id
+    where a.id = #{id,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from parkingrecord
+    from parkingrecord as a left join users as b on a.userId=b.id
   </select>
+  
+   <select id="selectAllEqual" resultMap="BaseResultMap" parameterType="com.zsj.parking.vo.ParkingRecord">
+    select 
+    <include refid="Base_Column_List" />
+    from parkingrecord as a left join users as b on a.userId=b.id
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+		<if test="userid != null">
+			AND userId=#{userid, jdbcType=VARCHAR}
+		</if>	
+	</trim>
+  </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from parkingrecord
     where id = #{id,jdbcType=VARCHAR}

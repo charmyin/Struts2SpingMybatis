@@ -34,7 +34,10 @@
 	<div class="panel panel-default">
 	  <!-- Default panel contents -->
 	  <div class="panel-heading">车辆管理
-	  <a href="toSave.action" style="float:right;">新增</a>
+	  
+	   <c:if test="${null ne role && 'admin' eq  role}">
+				<a href="toSave.action" style="float:right;">新增</a>
+	   </c:if>
 	  </div>
 	
 	  <!-- Table -->
@@ -47,7 +50,10 @@
             <th>型号</th>
             <th>所有人</th>
             <th>发动机号</th>
-            <th>操作</th>
+             <c:if test="${null ne role && 'admin' eq  role}">
+				 <th>操作</th>
+	  		 </c:if>
+           
           </tr>
         </thead>
         <tbody>
@@ -81,10 +87,10 @@
 						</c:if>
 		            </td>
 		            <td>
-		            	<c:if test="${null ne car.ownerid && '' ne  car.ownerid}">
-							<c:out value="${car.ownerid}" />
+		            	<c:if test="${null ne car.userName && '' ne  car.userName}">
+							<c:out value="${car.userName}" />(<c:out value="${car.userLoginId}" />)
 						</c:if>
-						<c:if test="${null eq car.ownerid}">
+						<c:if test="${null eq car.userName}">
 							&nbsp;
 						</c:if>
 		            </td>
@@ -96,10 +102,14 @@
 							&nbsp;
 						</c:if>
 		            </td>
-		             <td>
-		            	<a href="toEdit.action?carId=<c:if test="${null ne car.id && '' ne car.id}"><c:out value="${car.id}" /></c:if>" >修改</a>&nbsp;&nbsp;
-		            	<a href="delete.action?carId=<c:if test="${null ne car.id && '' ne car.id}"><c:out value="${car.id}" /></c:if>" >删除</a>
-		            </td>
+		             <c:if test="${null ne role && 'admin' eq  role}">
+						 <td>
+			            	<a href="toEdit.action?carId=<c:if test="${null ne car.id && '' ne car.id}"><c:out value="${car.id}" /></c:if>" >修改</a>&nbsp;&nbsp;
+			            	<a href="delete.action?carId=<c:if test="${null ne car.id && '' ne car.id}"><c:out value="${car.id}" /></c:if>" >删除</a>
+			            </td>
+			  		 </c:if>
+				            
+		             
 	            </tr>
       		</c:forEach>
         </tbody>

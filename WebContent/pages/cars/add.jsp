@@ -17,6 +17,58 @@
     <link rel="stylesheet" type="text/css" href="/proj/public/vendors/bootstrap/css/bootstrap.css">
     <script type="text/javascript" src="/proj/public/vendors/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/proj/public/vendors/bootstrap/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='/proj/public/vendors/bootstrap/typeahead/typeahead.css' />
+    <script type="text/javascript" src="/proj/public/vendors/bootstrap/typeahead/typeahead.bundle.js"></script>
+    <script type="text/javascript">
+    	$(function(){
+    		var substringMatcher = function(objs) {
+    			  return function findMatches(q, cb) {
+    			    var matches, substrRegex;
+    			 	//清除原有数据
+    			 	$("#inputowneridvalue").val("");
+    			    // an array that will be populated with substring matches
+    			    matches = [];
+    			    
+    			    // regex used to determine if a string contains the substring `q`
+    			    substrRegex = new RegExp(q, 'i');
+    			 
+    			    // iterate through the pool of strings and for any string that
+    			    // contains the substring `q`, add it to the `matches` array
+    			    $.each(objs, function(i, obj) {
+    			      if (substrRegex.test(obj.name)) {
+    			        // the typeahead jQuery plugin expects suggestions to a
+    			        // JavaScript object, refer to typeahead docs for more info
+    			        matches.push({ value: obj.name+"--"+obj.loginid ,id:obj.id});
+    			      }
+    			    });
+    			    
+    			    cb(matches);
+    			    
+    			  };
+    			};
+    			 
+    			var states =<c:out value="${typeaheadString}" escapeXml="false"/>
+    			 
+    			$('#the-basics .typeahead').typeahead({
+    			  hint: true,
+    			  highlight: true,
+    			  minLength: 1
+    			 
+    			},
+    			{
+    			  name: 'states',
+    			  displayKey: 'value',
+    			  source: substringMatcher(states)
+    			}).on("typeahead:selected", function(e, obj, name){
+    				$("#inputowneridvalue").val(obj.id);
+    			}).on("typeahead:closed", function(){
+    				var inputownerid = $("#inputowneridvalue").val();
+    				if(inputownerid==""){
+    					$("#inputownerid").val("");
+    				}
+    			});
+    	});
+    </script>
   </head>
  <body>
 
@@ -61,7 +113,10 @@
 		  <div class="form-group">
 		    <label for="inputownerid" class="col-sm-4 control-label">所有人</label>
 		    <div class="col-sm-4">
-		      <input type="text" class="form-control"  name="carVO.ownerid" id="inputownerid" placeholder="所有人">
+		      <div id="the-basics">
+				  <input class="typeahead form-control" type="text" id="inputownerid" placeholder="所属业主" value="">
+				  <input type="hidden" name="carVO.ownerid" id="inputowneridvalue" value="" />
+			  </div>
 		    </div>
 		  </div>
 		  <div class="form-group">

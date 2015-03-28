@@ -22,4 +22,6 @@ public interface CarMapper {
     int updateByPrimaryKey(Car record);
 
 	List<Car> selectAll();
+
+	List<Car> selectAllEqual(Car carVO);
 }
