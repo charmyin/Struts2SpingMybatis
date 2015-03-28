@@ -61,6 +61,9 @@
 		h2{
 			text-align:center;
 		}
+		input{
+			margin-top:3px;
+		}
     </style>
   </head>
  <body>
@@ -74,7 +77,7 @@
 	    </div>
       </c:if>
        <form class="form-signin" method="post" action="/proj/user/loginPost.action">
-	        <h2 class="form-signin-heading">欢迎使用车库管理系统</h2>
+	        <h2 class="form-signin-heading">社区停车场管理系统</h2>
 	        <label for="inputEmail" class="sr-only">账号</label>
 	        <input type="text" id="inputEmail" class="form-control" placeholder="账号" name="loginid" required autofocus>	       
 	        <label for="inputPassword" class="sr-only">密码</label>
