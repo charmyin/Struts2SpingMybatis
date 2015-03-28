@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="test" extends="default" namespace="/sys" >
+		<action name="testConnection" method="testConnection" class="testConnectionAction">
+			<result name="success">/success.jsp</result>
+		</action>
+	</package> 
+	<!-- 用户管理 -->
+	<package name="user" extends="default" namespace="/user" >
+
+		<action name="toEdit" method="toEditUser" class="com.zsj.parking.action.UserAction">
+			<result name="success">/pages/users/edit.jsp</result>
+		</action>	
+		<action name="toSave" method="toAddUser" class="com.zsj.parking.action.UserAction">
+			<result name="success">/pages/users/add.jsp</result>
+		</action>
+		<action name="save" method="addUser" class="com.zsj.parking.action.UserAction">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+		<action name="delete" method="deleteUser" class="com.zsj.parking.action.UserAction">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+
+		<action name="list" method="listUsers" class="com.zsj.parking.action.UserAction">
+			<result name="success">/pages/users/list.jsp</result>
+		</action>
+		<!-- 登录 -->
+		<action name="loginIndex" method="toCertificate" class="com.zsj.parking.action.UserAction">
+			<result name="success">/login.jsp</result>
+		</action>
+		<action name="login" method="certificate" class="com.zsj.parking.action.UserAction">
+			<result name="error">/login.jsp</result>
+			<result name="success" type="redirectAction">list.action</result>
+			<result name="simpleuser" type="redirectAction">../car/list.action</result>
+		</action>
+	</package> 
+	
+	<!-- 车辆管理 -->
+	<package name="car" extends="default" namespace="/car" >
+		<action name="toEdit" method="toEditCar" class="com.zsj.parking.action.CarAction">
+			<result name="success">/pages/cars/edit.jsp</result>
+		</action>	
+		<action name="toSave" method="toAddCar" class="com.zsj.parking.action.CarAction">
+			<result name="success">/pages/cars/add.jsp</result>
+		</action>
+		<action name="save" method="addCar" class="com.zsj.parking.action.CarAction">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+		<action name="delete" method="deleteCar" class="com.zsj.parking.action.CarAction">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+
+		<action name="list" method="listCar" class="com.zsj.parking.action.CarAction">
+			<result name="success">/pages/cars/list.jsp</result>
+		</action>
+	 </package> 
+	 
+	 <!-- 停车位管理 -->
+	 <package name="parkingPlace" extends="default" namespace="/parkingPlace" >
+
+		<action name="toEdit" method="toEditParkingPlace" class="com.zsj.parking.action.ParkingPlaceAction">
+			<result name="success">/pages/parkingPlace/edit.jsp</result>
+		</action>	
+		<action name="toSave" method="toAddParkingPlace" class="com.zsj.parking.action.ParkingPlaceAction">
+			<result name="success">/pages/parkingPlace/add.jsp</result>
+		</action>
+		<action name="save" method="addParkingPlace" class="com.zsj.parking.action.ParkingPlaceAction">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+		<action name="delete" method="deleteParkingPlace" class="com.zsj.parking.action.ParkingPlaceAction">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+
+		<action name="list" method="listParkingPlace" class="com.zsj.parking.action.ParkingPlaceAction">
+			<result name="success">/pages/parkingPlace/list.jsp</result>
+		</action>
+	 </package> 
+	 
+	 <!-- 停车记录  -->
+	 <package name="parkingRecord" extends="default" namespace="/parkingRecord" >
+		<action name="toEdit" method="toEditParkingRecord" class="com.zsj.parking.action.ParkingRecordAction">
+			<result name="success">/pages/parkingRecord/edit.jsp</result>
+		</action>	
+		<action name="toSave" method="toAddParkingRecord" class="com.zsj.parking.action.ParkingRecordAction">
+			<result name="success">/pages/parkingRecord/add.jsp</result>
+		</action>
+		<action name="save" method="addParkingRecord" class="com.zsj.parking.action.ParkingRecordAction">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+		<action name="delete" method="deleteParkingRecord" class="com.zsj.parking.action.ParkingRecordAction">
+			<result name="success" type="redirectAction">list.action</result>
+		</action>
+		<action name="list" method="listParkingRecord" class="com.zsj.parking.action.ParkingRecordAction">
+			<result name="success">/pages/parkingRecord/list.jsp</result>
+		</action>
+	 </package> 
+	
+	
+</struts>

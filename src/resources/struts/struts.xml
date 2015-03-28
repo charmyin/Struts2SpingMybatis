@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+   <!-- 开启使用开发模式，详细错误提示 -->
+    <constant name="struts.devMode" value="true"/> 
+    <!-- 将对象交给spring管理 -->
+    <constant name="struts.objectFactory" value="spring"/>
+    <!-- 指定资源编码类型 -->
+    <constant name="struts.i18n.encoding" value="UTF-8"/> 
+	<!-- 指定每次请求到达，重新加载资源文件 -->
+    <constant name="struts.i18n.reload" value="false"/>
+    <!-- 指定每次配置文件更改后，自动重新加载 -->
+    <constant name="struts.configuration.xml.reload" value="false"/>
+    <!-- 国际化资源文件 -->
+    <constant name="struts.custom.i18n.resources" value="resources/content/ApplicationResources"/>
+    
+    <!-- 默认后缀名 -->
+    <constant name="struts.action.extension" value="do,action,jhtml,,"/>
+    <constant name="struts.action.excludePattern" value=""/>
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+    
+	<include file="resources/struts/pathConfig.xml" />
+	
+	<package name="default" extends="struts-default" namespace="/">
+      <default-action-ref name="index"/>
+      <global-results>
+          <result name="error">/error.jsp</result>
+      </global-results>
+       <global-exception-mappings>
+            <exception-mapping result="error" exception="java.lang.Exception"/>
+       </global-exception-mappings>
+    </package>
+    
+</struts>

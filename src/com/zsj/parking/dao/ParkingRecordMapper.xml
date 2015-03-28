@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zsj.parking.dao.ParkingRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.zsj.parking.vo.ParkingRecord" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="plateNumber" property="platenumber" jdbcType="VARCHAR" />
+    <result column="carId" property="carid" jdbcType="VARCHAR" />
+    <result column="userId" property="userid" jdbcType="VARCHAR" />
+    <result column="parkingPlaceId" property="parkingplaceid" jdbcType="VARCHAR" />
+    <result column="inOrOut" property="inorout" jdbcType="INTEGER" />
+    <result column="fee" property="fee" jdbcType="REAL" />
+    <result column="happenTime" property="happentime" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, plateNumber, carId, userId, parkingPlaceId, inOrOut, fee, happenTime, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from parkingrecord
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from parkingrecord
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from parkingrecord
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zsj.parking.vo.ParkingRecord" >
+    insert into parkingrecord (id, plateNumber, carId, 
+      userId, parkingPlaceId, inOrOut, 
+      fee, happenTime, createTime
+      )
+    values (#{id,jdbcType=VARCHAR}, #{platenumber,jdbcType=VARCHAR}, #{carid,jdbcType=VARCHAR}, 
+      #{userid,jdbcType=VARCHAR}, #{parkingplaceid,jdbcType=VARCHAR}, #{inorout,jdbcType=INTEGER}, 
+      #{fee,jdbcType=REAL}, #{happentime,jdbcType=TIMESTAMP}, #{createtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zsj.parking.vo.ParkingRecord" >
+    insert into parkingrecord
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="platenumber != null" >
+        plateNumber,
+      </if>
+      <if test="carid != null" >
+        carId,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="parkingplaceid != null" >
+        parkingPlaceId,
+      </if>
+      <if test="inorout != null" >
+        inOrOut,
+      </if>
+      <if test="fee != null" >
+        fee,
+      </if>
+      <if test="happentime != null" >
+        happenTime,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="platenumber != null" >
+        #{platenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="carid != null" >
+        #{carid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="parkingplaceid != null" >
+        #{parkingplaceid,jdbcType=VARCHAR},
+      </if>
+      <if test="inorout != null" >
+        #{inorout,jdbcType=INTEGER},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=REAL},
+      </if>
+      <if test="happentime != null" >
+        #{happentime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+ <!--  <select id="countByExample" parameterType="com.zsj.parking.vo.ParkingRecordExample" resultType="java.lang.Integer" >
+    select count(*) from parkingrecord
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select> -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zsj.parking.vo.ParkingRecord" >
+    update parkingrecord
+    <set >
+      <if test="platenumber != null" >
+        plateNumber = #{platenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="carid != null" >
+        carId = #{carid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="parkingplaceid != null" >
+        parkingPlaceId = #{parkingplaceid,jdbcType=VARCHAR},
+      </if>
+      <if test="inorout != null" >
+        inOrOut = #{inorout,jdbcType=INTEGER},
+      </if>
+      <if test="fee != null" >
+        fee = #{fee,jdbcType=REAL},
+      </if>
+      <if test="happentime != null" >
+        happenTime = #{happentime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zsj.parking.vo.ParkingRecord" >
+    update parkingrecord
+    set plateNumber = #{platenumber,jdbcType=VARCHAR},
+      carId = #{carid,jdbcType=VARCHAR},
+      userId = #{userid,jdbcType=VARCHAR},
+      parkingPlaceId = #{parkingplaceid,jdbcType=VARCHAR},
+      inOrOut = #{inorout,jdbcType=INTEGER},
+      fee = #{fee,jdbcType=REAL},
+      happenTime = #{happentime,jdbcType=TIMESTAMP},
+      createTime = #{createtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
