@@ -55,6 +55,15 @@
 			<result name="success" type="redirectAction">list.action</result>
 			<result name="simpleuser" type="redirectAction">../car/list.action</result>
 		</action>
+		<!-- 修改密码页面  -->
+		<action name="toChangePwd" method="toChangePassword" class="com.zsj.parking.action.UserAction">
+			<result name="success">/pages/users/changePwd.jsp</result>
+		</action>
+		<!-- 修改密码 -->
+		<action name="changePwd" method="changePassword" class="com.zsj.parking.action.UserAction">
+			<result name="success">/pages/users/changePwd.jsp</result>
+			<result name="login" type="redirectAction">logout.action</result>
+		</action>
 	</package> 
 	
 	<!-- 车辆管理 -->
@@ -155,7 +164,18 @@
 		<action name="list" method="listParkingRecord" class="com.zsj.parking.action.ParkingRecordAction">
 			<result name="success">/pages/parkingRecord/list.jsp</result>
 		</action>
+		<action name="list" method="listParkingRecord" class="com.zsj.parking.action.ParkingRecordAction">
+			<result name="success">/pages/parkingRecord/list.jsp</result>
+		</action>
 	 </package> 
+	 
+	 <package name="parkingRecordListInTime" extends="json-default">  
+        <action name="calculateSumMoney" class="com.zsj.parking.action.ParkingRecordAction" method="calculateSumMoney">              
+            <result type="json">  
+                <param name="root">responseJson</param>  
+            </result>  
+        </action>  
+     </package>
 	
 	
 </struts>

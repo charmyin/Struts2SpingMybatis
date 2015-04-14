@@ -21,6 +21,8 @@ public class ParkingRecord {
 
     private Date createtime;
     
+    private String parkingplacecode;
+    
     /*******查询用用户信息******/
     private String userName;
     private String userLoginId;
@@ -114,4 +116,13 @@ public class ParkingRecord {
     public void setCreatetime(Date createtime) {
         this.createtime = createtime;
     }
+
+	public String getParkingplacecode() {
+		return parkingplacecode;
+	}
+
+	public void setParkingplacecode(String parkingplacecode) {
+		this.parkingplacecode = parkingplacecode;
+	}
+    
 }

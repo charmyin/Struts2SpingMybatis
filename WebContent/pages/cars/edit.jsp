@@ -67,6 +67,18 @@
     					$("#inputownerid").val("");
     				}
     			});
+    			
+    			
+    			//表单提交事件
+    			$("form").submit(function(event){
+    				if($("#inputowneridvalue").val()){
+    					return;
+    				}else{
+    					alert("请输入所属业主用户！")
+       				 	event.preventDefault();
+    				}
+    				
+   				});
     	});
     </script>
   </head>

@@ -10,13 +10,12 @@ public class ParkingPlace {
     private String code;
 
     private String remark;
-    
+    //0空置，1占用
+    private Integer status;
     
     /*******查询用用户信息******/
     private String userName;
     private String userLoginId;
-    
-    
 
     public String getUserName() {
 		return userName;
@@ -74,4 +73,13 @@ public class ParkingPlace {
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
     }
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+    
 }

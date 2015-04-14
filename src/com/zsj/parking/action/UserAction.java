@@ -35,7 +35,10 @@ public class UserAction extends ActionSupport {
 	private String message;
 	//用于导航菜单确定位置
 	private String navname="user";
-	
+	//新密码
+	private String newPassword;
+	//新密码1
+	private String newPassword1;
 	//角色
 	//private String role="user";
 	
@@ -154,6 +157,37 @@ public class UserAction extends ActionSupport {
 		return Action.SUCCESS;
 	}
 	
+	/**
+	 * 修改密码
+	 * @return
+	 */
+	public String changePassword(){
+		ActionContext actionContext = ActionContext.getContext(); 
+		Map session = actionContext.getSession();   
+	    Object obj = session.get("userinfo");
+	    Users user = (Users)obj;
+	    if(user != null && user.getPassword().equals(password)){
+	    	message="OK";
+	    	user.setPassword(newPassword);
+	    	usersMapper.updateByPrimaryKey(user);
+	    	return Action.LOGIN;
+	    }
+	     else{
+	    	message="原密码不正确！";
+	    }
+	    if(newPassword1!=null && !newPassword1.equals(newPassword)){
+	    	message="新密码不一致！";
+	    }
+	    
+		return Action.SUCCESS;
+	}
+	/**
+	 * 修改密码页面
+	 * @return
+	 */
+	public String toChangePassword(){    
+		return Action.SUCCESS;
+	}
 	
 	public TestConnectionService getTestConnectionService() {
 		return testConnectionService;
@@ -217,6 +251,22 @@ public class UserAction extends ActionSupport {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+
+	public String getNewPassword1() {
+		return newPassword1;
+	}
+
+	public void setNewPassword1(String newPassword1) {
+		this.newPassword1 = newPassword1;
 	}
 
 	

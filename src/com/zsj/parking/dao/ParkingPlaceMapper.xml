@@ -7,6 +7,7 @@
     <result column="carplace" property="carplace" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
     <result column="name" property="userName" jdbcType="VARCHAR" />
     <result column="loginId" property="userLoginId" jdbcType="VARCHAR" />
   </resultMap>
@@ -64,6 +65,9 @@
 		<if test="userid != null">
 			AND userid=#{userid, jdbcType=VARCHAR}
 		</if>	
+		<if test="status != null" >
+       		and status = #{status,jdbcType=INTEGER}
+      </if>
 	</trim>
   </select>
   
@@ -135,6 +139,9 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -143,6 +150,7 @@
     set userId = #{userid,jdbcType=VARCHAR},
       carplace = #{carplace,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>

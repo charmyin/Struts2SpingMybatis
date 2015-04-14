@@ -82,6 +82,88 @@
     					$("#inputuserid").val("");
     				}
     			});
+    			
+    			
+    			
+    			//自动填充车位
+        		var substringMatcher1 = function(objs) {
+        			  return function findMatches(q, cb) {
+        			    var matches, substrRegex;
+        			 	//清除原有数据
+        			 	$("#inputparkingvalue").val("");
+        			 	$("#parkingplaceid").val("");
+        			    // an array that will be populated with substring matches
+        			    matches = [];
+        			    
+        			    // regex used to determine if a string contains the substring `q`
+        			    substrRegex = new RegExp(q, 'i');
+        			 
+        			    // iterate through the pool of strings and for any string that
+        			    // contains the substring `q`, add it to the `matches` array
+        			    $.each(objs, function(i, obj) {
+        			      if (substrRegex.test(obj.code)) {
+        			        // the typeahead jQuery plugin expects suggestions to a
+        			        // JavaScript object, refer to typeahead docs for more info
+        			        matches.push({ value: obj.code+"--"+obj.carplace ,id:obj.id});
+        			      }
+        			    });
+        			    
+        			    cb(matches);
+        			    
+        			  };
+        			};
+        			//占用 
+        			var states1 =<c:out value="${typeaheadStringParking}" escapeXml="false"/>
+        			//未占用
+        			var states0 =<c:out value="${typeaheadStringParkingNot}" escapeXml="false"/>
+        			
+        			function changetypeahead(statusparam){
+        				$('#typeaheadparking').typeahead('destroy');
+        				//$('#typeaheadparking').typeahead("destory");
+        				$('#typeaheadparking').typeahead({
+              			  hint: true,
+              			  highlight: true,
+              			  minLength: 1
+              			},
+              			{
+              			  name: 'carplace',
+              			  displayKey: 'value',
+              			  source: substringMatcher1(statusparam)
+              			}).on("typeahead:selected", function(e, obj, name){
+              				$("#parkingplaceid").val(obj.id);
+              				
+              			}).on("typeahead:closed", function(){
+              				var inputownerid = $("#parkingplaceid").val();
+              				if(inputownerid==""){
+              					$("#typeaheadparking").val("");
+              				}
+              			});
+        			}
+        			
+        			//初始化为0，展示空车位
+        			changetypeahead(states0);
+        			
+
+        			$("select").change(function(e){
+        				$("#typeaheadparking").val("");
+        				$("#parkingplaceid").val("");
+        				if($(this).val()=="0"){
+        					changetypeahead(states1);
+        				}else{
+        					changetypeahead(states0);
+        				}
+        			});
+        			
+        			//表单提交事件
+        			$("form").submit(function(event){
+        				if($("#parkingplaceid").val()){
+        					return;
+        				}else{
+        					alert("请输入所属车位！")
+           				 	event.preventDefault();
+        				}
+        				
+       				});
     	});
     </script>
   </head>
@@ -129,26 +211,27 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label for="inputparkingplaceid" class="col-sm-4 control-label">所在停车位</label>
+		    <label for="typeaheadparking" class="col-sm-4 control-label">所在停车位</label>
 		    <div class="col-sm-4">
-		      <input type="text" class="form-control"  name="parkingRecordVO.parkingplaceid" id="inputparkingplaceid" placeholder="所在停车位">
+		      <input type="text" class="typeahead form-control" name="" id="typeaheadparking" placeholder="所在停车位">
+			  <input type="hidden" name="parkingRecordVO.parkingplaceid" id="parkingplaceid" value="" />
 		    </div>
 		  </div>
 		  <div class="form-group">
 		    <label for="inputinorout" class="col-sm-4 control-label">出库/入库</label>
 		    <div class="col-sm-4">
 		      <select class="form-control" name="parkingRecordVO.inorout" >
-			  		<option value="0" selected>出库</option>
-			  		<option value="1" >入库</option>
+			  		<option value="0" >出库</option>
+			  		<option value="1" selected>入库</option>
 			  </select>
 		    </div>
 		  </div>
-		  <div class="form-group">
+		 <!--  <div class="form-group">
 		    <label for="inputfee" class="col-sm-4 control-label">费用</label>
 		    <div class="col-sm-4">
 		      <input type="text" class="form-control"  name="parkingRecordVO.fee" id="inputfee" placeholder="费用">
 		    </div>
-		  </div>
+		  </div> -->
 		  <div class="form-group">
 		    <label for="inputhappentime" class="col-sm-4 control-label">出入库时间</label>
 		    <div class="col-sm-4">

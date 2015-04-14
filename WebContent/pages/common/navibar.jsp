@@ -22,6 +22,7 @@
               <li id="carNavBar"><a href="/proj/car/list.action">车辆管理</a></li>
               <li id="placeNavBar"><a href="/proj/parkingPlace/list.action">车位管理</a></li>
               <li id="recordNavBar"><a href="/proj/parkingRecord/list.action">停车记录</a></li>
+              <li id="passwordNavBar"><a href="/proj/user/toChangePwd.action">修改密码</a></li>
               <!-- <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">

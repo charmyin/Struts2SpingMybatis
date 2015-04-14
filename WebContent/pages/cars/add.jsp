@@ -20,6 +20,7 @@
     <link rel='stylesheet' href='/proj/public/vendors/bootstrap/typeahead/typeahead.css' />
     <script type="text/javascript" src="/proj/public/vendors/bootstrap/typeahead/typeahead.bundle.js"></script>
     <script type="text/javascript">
+    	 
     	$(function(){
     		var substringMatcher = function(objs) {
     			  return function findMatches(q, cb) {
@@ -67,6 +68,19 @@
     					$("#inputownerid").val("");
     				}
     			});
+    			
+    			
+    			
+    			//表单提交事件
+    			$("form").submit(function(event){
+    				if($("#inputowneridvalue").val()){
+    					return;
+    				}else{
+    					alert("请输入所属业主用户！")
+       				 	event.preventDefault();
+    				}
+    				
+   				});
     	});
     </script>
   </head>
@@ -129,7 +143,7 @@
 		  
 		  <div class="form-group">
 		    <div class="col-sm-offset-5 col-sm-10">
-		      <button type="submit" class="btn btn-primary">保存</button>
+		      <button type="submit" onclick="submitForm();" class="btn btn-primary">保存</button>
 		      <a href="javascript:history.go(-1)" class="btn btn-danger">取消</a>
 		    </div>
 		  </div>

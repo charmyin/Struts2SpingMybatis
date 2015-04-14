@@ -1,5 +1,6 @@
 package com.zsj.parking.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.challenger.system.basic.SQLMapper;
@@ -26,4 +27,6 @@ public interface ParkingRecordMapper {
 	List<ParkingRecord> selectAll();
 	
 	List<ParkingRecord> selectAllEqual(ParkingRecord parkingRecord);
+
+	List<ParkingRecord> selectTimeBetween(Date startTimeDate, Date endTimeDate);
 }

@@ -1,9 +1,13 @@
 package com.zsj.parking.action;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -17,6 +21,7 @@ import com.common.utils.UUIDGenerator;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 import com.struts.utils.SessionUtils;
+import com.zsj.parking.dao.ParkingPlaceMapper;
 import com.zsj.parking.dao.ParkingRecordMapper;
 import com.zsj.parking.dao.UsersMapper;
 import com.zsj.parking.vo.ParkingPlace;
@@ -31,6 +36,9 @@ public class ParkingRecordAction extends ActionSupport {
 	
 	private List<ParkingRecord> parkingRecordList = new ArrayList<ParkingRecord>();
 	
+	@Resource
+	private ParkingPlaceMapper parkingPlaceMapper;
+	
 	ParkingRecord parkingRecordVO;// = new ParkingRecord();
 	
 	@Resource
@@ -43,14 +51,40 @@ public class ParkingRecordAction extends ActionSupport {
 	private String navname="record";
 	
 	private String typeaheadString="[]";
+	
+	private String typeaheadStringParking="[]";
+	
+	private String typeaheadStringParkingNot="[]";
+	
+	//开始时间
+	private String startTime;
+	//结束时间
+	private String endTime;
+	
+	public Map responseJson;  
+    public Map getResponseJson() {  
+        return responseJson;  
+    }  
+    public void setResponseJson(Map responseJson) {  
+        this.responseJson = responseJson;  
+    }
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8286676643856005055L;
 	private TestConnectionService testConnectionService;
 	static Logger logger = Logger.getLogger(ParkingRecordAction.class);
+	/**
+	 * 添加或更新停车记录
+	 * @return
+	 */
 	public String addParkingRecord()
 	{
+		ParkingPlace pp = new ParkingPlace();//parkingPlaceMapper.selectByPrimaryKey(parkingRecordVO.getParkingplaceid());
+		pp.setId(parkingRecordVO.getParkingplaceid());
+		pp.setStatus(parkingRecordVO.getInorout());
+		parkingPlaceMapper.updateByPrimaryKeySelective(pp);
 		//如果传来parkingRecordid，则认为是更新
 		if(parkingRecordVO.getId()!=null){
 			parkingRecordMapper.updateByPrimaryKeySelective(parkingRecordVO);
@@ -68,9 +102,15 @@ public class ParkingRecordAction extends ActionSupport {
 	public String toAddParkingRecord(){
 		List<Users> users = usersMapper.selectAll();
 		ObjectMapper mapper = new ObjectMapper();
+		ParkingPlace pp = new ParkingPlace();
+		pp.setStatus(0);
+		List<ParkingPlace> records = parkingPlaceMapper.selectAllEqual(pp);
+		pp.setStatus(1);
+		List<ParkingPlace> records1 = parkingPlaceMapper.selectAllEqual(pp);
 		try {
 			typeaheadString = mapper.writeValueAsString(users);
-			
+			typeaheadStringParking = mapper.writeValueAsString(records1);
+			typeaheadStringParkingNot = mapper.writeValueAsString(records);
 		} catch (JsonGenerationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,9 +131,15 @@ public class ParkingRecordAction extends ActionSupport {
 	public String toEditParkingRecord(){
 		List<Users> users = usersMapper.selectAll();
 		ObjectMapper mapper = new ObjectMapper();
+		ParkingPlace pp = new ParkingPlace();
+		pp.setStatus(0);
+		List<ParkingPlace> records = parkingPlaceMapper.selectAllEqual(pp);
+		pp.setStatus(1);
+		List<ParkingPlace> records1 = parkingPlaceMapper.selectAllEqual(pp);
 		try {
 			typeaheadString = mapper.writeValueAsString(users);
-			
+			typeaheadStringParking = mapper.writeValueAsString(records1);
+			typeaheadStringParkingNot = mapper.writeValueAsString(records);
 		} catch (JsonGenerationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -117,7 +163,7 @@ public class ParkingRecordAction extends ActionSupport {
 		return Action.SUCCESS;
 	}
 	/**
-	 * 停车记录列表
+	 * 停车记表
 	 * @return
 	 */
 	public String listParkingRecord(){
@@ -133,6 +179,28 @@ public class ParkingRecordAction extends ActionSupport {
 		this.parkingRecordList = parkingRecordMapper.selectAllEqual(parkingRecordVO);
 		return Action.SUCCESS;
 		
+	}
+	
+	/**
+	 * 计算时间段内的收入
+	 * @return
+	 */
+	public String calculateSumMoney(){
+		SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+		Date startTimeDate=null;
+		Date endTimeDate=null;
+		try {
+			startTimeDate = sdf.parse(startTime);
+			endTimeDate = sdf.parse(endTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return Action.SUCCESS;
+		}
+		List<ParkingRecord> list = parkingRecordMapper.selectTimeBetween(startTimeDate, endTimeDate);
+		Map<String, Object> m = new HashMap<String, Object>();  
+		m.put("list", list);
+		this.setResponseJson(m);
+		return Action.SUCCESS;
 	}
 
 	
@@ -184,6 +252,37 @@ public class ParkingRecordAction extends ActionSupport {
 	public void setTypeaheadString(String typeaheadString) {
 		this.typeaheadString = typeaheadString;
 	}
-	
+
+	public String getTypeaheadStringParking() {
+		return typeaheadStringParking;
+	}
+
+	public void setTypeaheadStringParking(String typeaheadStringParking) {
+		this.typeaheadStringParking = typeaheadStringParking;
+	}
+
+	public String getTypeaheadStringParkingNot() {
+		return typeaheadStringParkingNot;
+	}
+
+	public void setTypeaheadStringParkingNot(String typeaheadStringParkingNot) {
+		this.typeaheadStringParkingNot = typeaheadStringParkingNot;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
 	
 }

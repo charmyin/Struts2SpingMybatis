@@ -7,6 +7,7 @@
     <result column="carId" property="carid" jdbcType="VARCHAR" />
     <result column="userId" property="userid" jdbcType="VARCHAR" />
     <result column="parkingPlaceId" property="parkingplaceid" jdbcType="VARCHAR" />
+    <result column="parkingPlaceCode" property="parkingplacecode" jdbcType="VARCHAR" />
     <result column="inOrOut" property="inorout" jdbcType="INTEGER" />
     <result column="fee" property="fee" jdbcType="REAL" />
     <result column="happenTime" property="happentime" jdbcType="TIMESTAMP" />
@@ -44,28 +45,45 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    a.id as id, plateNumber, carId, b.id as userId, parkingPlaceId, inOrOut, fee, happenTime, createTime, name, loginId
+    a.id as id, plateNumber, carId, b.id as userId, parkingPlaceId, inOrOut, fee, happenTime, createTime, name, loginId, c.code as parkingPlaceCode
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from parkingrecord as a left join users as b on a.userId=b.id
+    from parkingrecord as a left join users as b on a.userId=b.id left join parkingplace as c on a.parkingPlaceId = c.id
     where a.id = #{id,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from parkingrecord as a left join users as b on a.userId=b.id
+    from parkingrecord as a left join users as b on a.userId=b.id left join parkingplace as c on a.parkingPlaceId = c.id 
   </select>
   
    <select id="selectAllEqual" resultMap="BaseResultMap" parameterType="com.zsj.parking.vo.ParkingRecord">
     select 
     <include refid="Base_Column_List" />
-    from parkingrecord as a left join users as b on a.userId=b.id
+    from parkingrecord as a left join users as b on a.userId=b.id left join parkingplace as c on a.parkingPlaceId = c.id 
     <trim prefix="WHERE" prefixOverrides="AND|OR">
 		<if test="userid != null">
 			AND userId=#{userid, jdbcType=VARCHAR}
 		</if>	
+		<if test="status != null" >
+           and status = #{status,jdbcType=INTEGER}
+        </if>
+	</trim>
+  </select>
+  
+  <select id="selectTimeBetween" resultMap="BaseResultMap" parameterType="com.zsj.parking.vo.ParkingRecord">
+    select 
+    <include refid="Base_Column_List" />
+    from parkingrecord as a left join users as b on a.userId=b.id left join parkingplace as c on a.parkingPlaceId = c.id 
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+		<if test="startTimeDate != null">
+			AND happentime &gt;= #{startTimeDate, jdbcType=VARCHAR}
+		</if>	
+		<if test="endTimeDate != null" >
+           and happentime &lt;= #{status,jdbcType=INTEGER}
+        </if>
 	</trim>
   </select>
   
