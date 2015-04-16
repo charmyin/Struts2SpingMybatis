@@ -9,7 +9,7 @@
     <result column="parkingPlaceId" property="parkingplaceid" jdbcType="VARCHAR" />
     <result column="parkingPlaceCode" property="parkingplacecode" jdbcType="VARCHAR" />
     <result column="inOrOut" property="inorout" jdbcType="INTEGER" />
-    <result column="fee" property="fee" jdbcType="REAL" />
+    <result column="fee" property="fee" jdbcType="FLOAT" />
     <result column="happenTime" property="happentime" jdbcType="TIMESTAMP" />
     <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="name" property="userName" jdbcType="VARCHAR" />
@@ -53,6 +53,15 @@
     from parkingrecord as a left join users as b on a.userId=b.id left join parkingplace as c on a.parkingPlaceId = c.id
     where a.id = #{id,jdbcType=VARCHAR}
   </select>
+  
+  <select id="selectLatestToParkingByPlaceId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from parkingrecord as a left join users as b on a.userId=b.id left join parkingplace as c on a.parkingPlaceId = c.id
+    where c.id = #{parkingplaceid,jdbcType=VARCHAR} and inOrOut=1
+    order by happentime desc
+  </select>
+  
   <select id="selectAll" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -73,18 +82,16 @@
 	</trim>
   </select>
   
-  <select id="selectTimeBetween" resultMap="BaseResultMap" parameterType="com.zsj.parking.vo.ParkingRecord">
+  <select id="selectTimeBetween" resultMap="BaseResultMap" parameterType="map">
     select 
     <include refid="Base_Column_List" />
     from parkingrecord as a left join users as b on a.userId=b.id left join parkingplace as c on a.parkingPlaceId = c.id 
-    <trim prefix="WHERE" prefixOverrides="AND|OR">
-		<if test="startTimeDate != null">
-			AND happentime &gt;= #{startTimeDate, jdbcType=VARCHAR}
-		</if>	
-		<if test="endTimeDate != null" >
-           and happentime &lt;= #{status,jdbcType=INTEGER}
-        </if>
-	</trim>
+    	   where happentime &gt;= #{startTimeDate, jdbcType=TIMESTAMP}
+		 
+           and happentime &lt;= #{endTimeDate,jdbcType=TIMESTAMP}
+       
+           and inOrOut=0
+
   </select>
   
   

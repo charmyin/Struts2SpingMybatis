@@ -84,7 +84,16 @@ public class ParkingRecordAction extends ActionSupport {
 		ParkingPlace pp = new ParkingPlace();//parkingPlaceMapper.selectByPrimaryKey(parkingRecordVO.getParkingplaceid());
 		pp.setId(parkingRecordVO.getParkingplaceid());
 		pp.setStatus(parkingRecordVO.getInorout());
+		
 		parkingPlaceMapper.updateByPrimaryKeySelective(pp);
+		if(parkingRecordVO.getInorout()==0){//0：出库
+			//如果出库出库需要计算出所用的费用，查找出本车位最近一次入库时间，计算出时间差
+			ParkingRecord parkingRecord = parkingRecordMapper.selectLatestToParkingByPlaceId(parkingRecordVO.getParkingplaceid());
+			long aaa = parkingRecordVO.getHappentime().getTime()-parkingRecord.getHappentime().getTime();
+			float cost = aaa/1000/3600*10;//10元每小时
+			parkingRecordVO.setFee(cost);
+		}
+		
 		//如果传来parkingRecordid，则认为是更新
 		if(parkingRecordVO.getId()!=null){
 			parkingRecordMapper.updateByPrimaryKeySelective(parkingRecordVO);
@@ -196,9 +205,18 @@ public class ParkingRecordAction extends ActionSupport {
 			e.printStackTrace();
 			return Action.SUCCESS;
 		}
-		List<ParkingRecord> list = parkingRecordMapper.selectTimeBetween(startTimeDate, endTimeDate);
-		Map<String, Object> m = new HashMap<String, Object>();  
-		m.put("list", list);
+		Map<String, Date> map = new HashMap<String, Date>();
+		map.put("startTimeDate", startTimeDate);
+		map.put("endTimeDate", endTimeDate);
+		List<ParkingRecord> list = parkingRecordMapper.selectTimeBetween(map);
+		Map<String, Object> m = new HashMap<String, Object>();
+		
+		float totalCount = 0f;
+		for(ParkingRecord park : list){
+			if(park.getFee()!=null)
+			totalCount = park.getFee()+totalCount;
+		}
+		m.put("money", totalCount);
 		this.setResponseJson(m);
 		return Action.SUCCESS;
 	}

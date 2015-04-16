@@ -31,18 +31,18 @@
     		
     		
     		$("#calculateMoney").click(function(){
-    			alert(123)
+    			//alert(123)
     			var data = {};
     			data.startTime=$("#startTime").val();
     			data.endTime=$("#endTime").val();
     			console.log(data);
-    			return;
+    			//return;
     			$.ajax({
    				  type: 'POST',
    				  url: "calculateSumMoney.action",
    				  data: data,
    				  success: function(result){
-   					  
+   					  $("#moneyshow").html(result.money);
    				  },
    				  error:function(){
    					  alert("输入错误或者服务器内部错误！")
@@ -92,7 +92,7 @@
   	<button type="button" id="calculateMoney" class="btn btn-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;统计&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
   </div>
   <div class="col-lg-2">
-  	<h4><span class="label label-danger">总额：<strong>11.2</strong></span></h4>
+  	<h4><span class="label label-danger">总额：<strong id="moneyshow"></strong></span></h4>
   </div>
 </div><!-- /.row -->
 

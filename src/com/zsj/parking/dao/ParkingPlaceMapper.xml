@@ -41,7 +41,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    a.id as id, a.id as userId, carplace, code, remark, name, loginId, name, loginId
+    a.id as id, a.id as userId, carplace, code, remark, name, loginId, name, loginId, status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 

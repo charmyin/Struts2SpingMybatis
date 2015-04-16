@@ -12,7 +12,10 @@ public class ParkingRecord {
     private String userid;
 
     private String parkingplaceid;
-
+    /**
+     * 1:入库
+     * 0：出库
+     */
     private Integer inorout;
 
     private Float fee;

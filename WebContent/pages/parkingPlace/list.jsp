@@ -48,6 +48,7 @@
             <th>车位编号</th>
             <th>所在位置</th>
             <th>所属业主</th>
+            <th>状态</th>
             <th>备注</th>
             <c:if test="${null ne role && 'admin' eq  role}">
 				 <th>操作</th>
@@ -84,6 +85,14 @@
 							<strong style="color:red;">无所属业主</strong>
 						</c:if>
 		            </td>
+		             <td>
+		            	<c:if test="${'1' eq parkingPlace.status}">
+							<strong style="color:red;">占用</strong>
+						</c:if>
+						<c:if test="${0 eq parkingPlace.status}">
+							<strong style="color:green;">空车位</strong>
+						</c:if>
+					 </td>
 		            <td>
 		            	<c:if test="${null ne parkingPlace.remark && '' ne  parkingPlace.remark}">
 							<c:out value="${parkingPlace.remark}" />

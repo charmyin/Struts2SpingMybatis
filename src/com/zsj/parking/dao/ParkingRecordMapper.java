@@ -2,6 +2,7 @@ package com.zsj.parking.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.challenger.system.basic.SQLMapper;
 import com.zsj.parking.vo.Car;
@@ -29,4 +30,8 @@ public interface ParkingRecordMapper {
 	List<ParkingRecord> selectAllEqual(ParkingRecord parkingRecord);
 
 	List<ParkingRecord> selectTimeBetween(Date startTimeDate, Date endTimeDate);
+
+	ParkingRecord selectLatestToParkingByPlaceId(String parkingplaceid);
+
+	List<ParkingRecord> selectTimeBetween(Map<String, Date> map);
 }
